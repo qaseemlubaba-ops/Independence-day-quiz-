@@ -1,0 +1,471 @@
+ <!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>हर घर तिरंगा - Independence Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+
+  /* Unique Tiranga Themed Background */
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: 
+      radial-gradient(circle at top left, #FF9933 25%, transparent 70%),
+      radial-gradient(circle at bottom right, #138808 30%, transparent 70%),
+      linear-gradient(135deg, #FF9933 25%, #FFFFFF 50%, #138808 75%);
+    background-blend-mode: screen, screen, normal;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 15px;
+  }
+
+  #container {
+    background: white;
+    width: 100%;
+    max-width: 720px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    padding: 30px 40px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  /* Tiranga Flag Style Heading */
+  .tiranga-flag-heading {
+    position: relative;
+    width: 360px;
+    height: 120px;
+    margin: 0 auto 40px;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    font-weight: 900;
+    font-size: 2.8rem;
+    text-align: center;
+    user-select: none;
+    color: #0B3D91;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+
+  .stripe {
+    position: absolute;
+    width: 100%;
+    height: 33.33%;
+    left: 0;
+    opacity: 0.9;
+  }
+
+  .kesariya {
+    top: 0;
+    background: #FF9933;
+  }
+
+  .safed {
+    top: 33.33%;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hara {
+    bottom: 0;
+    background: #138808;
+  }
+
+  .chakra {
+    width: 48px;
+    height: 48px;
+    stroke: #0B3D91;
+    stroke-width: 2.5;
+  }
+
+  .flag-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    color: #0B3D91;
+    text-shadow: 0 0 4px #fff, 0 0 8px #138808;
+    font-weight: 900;
+    user-select: none;
+  }
+
+  @media(max-width: 400px) {
+    .tiranga-flag-heading {
+      width: 280px;
+      height: 100px;
+      font-size: 2rem;
+    }
+    .chakra {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  /* Quiz styling */
+  #quiz-container {
+    margin-top: 10px;
+  }
+  .question {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2C3E50;
+    user-select: none;
+  }
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  .options button {
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 2px solid #3498db;
+    border-radius: 12px;
+    background: #ecf0f1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 2px 4px 6px rgba(52, 152, 219, 0.3);
+  }
+  .options button:hover:not(:disabled) {
+    background: #3498db;
+    color: white;
+    box-shadow: 2px 6px 10px rgba(52, 152, 219, 0.7);
+    transform: translateY(-2px);
+  }
+  .options button:disabled {
+    cursor: default;
+    opacity: 0.75;
+  }
+  #next-btn {
+    margin-top: 25px;
+    padding: 15px 30px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: #27ae60;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(39, 174, 96, 0.6);
+    transition: background 0.4s ease;
+    display: none;
+    user-select: none;
+  }
+  #next-btn:hover {
+    background: #219150;
+  }
+  #score-container {
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 30px;
+    font-weight: 700;
+    color: #34495e;
+    user-select: none;
+  }
+  #about-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #E94E1B, #F39C12);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(233, 78, 27, 0.7);
+    transition: background 0.3s ease;
+    user-select: none;
+    z-index: 1100;
+  }
+  #about-btn:hover {
+    background: linear-gradient(45deg, #F39C12, #E94E1B);
+  }
+  #about-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 35px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-width: 420px;
+    text-align: center;
+    z-index: 1200;
+    user-select: none;
+  }
+  #about-modal h2 {
+    margin-bottom: 20px;
+    color: #E94E1B;
+    font-size: 2rem;
+  }
+  #about-modal p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #2C3E50;
+  }
+  #close-about {
+    margin-top: 25px;
+    padding: 12px 25px;
+    background: #c0392b;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(192, 57, 43, 0.7);
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  #close-about:hover {
+    background: #992d22;
+  }
+  /* Overlay */
+  #overlay {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1150;
+  }
+  /* Responsive */
+  @media(max-width: 600px) {
+    .options {
+      grid-template-columns: 1fr;
+    }
+    #container {
+      padding: 20px;
+    }
+    .tiranga-flag-heading {
+      width: 280px;
+      height: 100px;
+      font-size: 2rem;
+    }
+    .chakra {
+      width: 36px;
+      height: 36px;
+    }
+    .question {
+      font-size: 1.3rem;
+    }
+    .options button {
+      font-size: 1rem;
+      padding: 12px;
+    }
+    #next-btn {
+      font-size: 1.1rem;
+      padding: 12px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="container" role="main" aria-labelledby="main-heading">
+  <button id="about-btn" aria-haspopup="dialog" aria-controls="about-modal">About</button>
+
+  <h1 id="main-heading" class="tiranga-flag-heading" aria-label="हर घर तिरंगा">
+    <span class="stripe kesariya"></span>
+    <span class="stripe safed">
+      <svg class="chakra" viewBox="0 0 24 24" fill="none" stroke="#0B3D91" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="2" x2="12" y2="22"></line>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+        <line x1="4.93" y1="19.07" x2="19.07" y2="4.93"></line>
+        <line x1="12" y1="12" x2="12" y2="2"></line>
+        <line x1="12" y1="12" x2="16.95" y2="5.05"></line>
+        <line x1="12" y1="12" x2="19.07" y2="12"></line>
+        <line x1="12" y1="12" x2="16.95" y2="18.95"></line>
+        <line x1="12" y1="12" x2="12" y2="22"></line>
+        <line x1="12" y1="12" x2="7.05" y2="18.95"></line>
+        <line x1="12" y1="12" x2="4.93" y2="12"></line>
+        <line x1="12" y1="12" x2="7.05" y2="5.05"></line>
+      </svg>
+    </span>
+    <span class="stripe hara"></span>
+    <span class="flag-text">हर घर तिरंगा</span>
+  </h1>
+
+  <div id="quiz-container">
+    <div id="question-container">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <button id="next-btn" aria-label="Next question">Next</button>
+    <div id="score-container" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- About modal -->
+<div id="overlay" tabindex="-1"></div>
+<div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" tabindex="0">
+  <h2 id="about-title">About</h2>
+  <p><strong>Name:</strong> Lubabah</p>
+  <p><strong>School:</strong> Arya Kanya Inter College</p>
+  <p><strong>Email:</strong> qaseemlubaba@gmail.com</p>
+  <button id="close-about" aria-label="Close About dialog">Close</button>
+</div>
+
+<script>
+  const questions = [
+    {
+      question: "भारत का राष्ट्रीय ध्वज किस वर्ष अपनाया गया था?",
+      options: ["1947", "1950", "1949", "1952"],
+      answer: "1947"
+    },
+    {
+      question: "राष्ट्रीय ध्वज में कितनी धारियां होती हैं?",
+      options: ["3", "4", "2", "5"],
+      answer: "3"
+    },
+    {
+      question: "राष्ट्रीय ध्वज में नीले रंग का चक्र क्या कहलाता है?",
+      options: ["अशोक चक्र", "सूर्य चक्र", "धर्म चक्र", "शांति चक्र"],
+      answer: "अशोक चक्र"
+    },
+    {
+      question: "भारत का स्वतंत्रता दिवस कब मनाया जाता है?",
+      options: ["15 अगस्त", "26 जनवरी", "2 अक्टूबर", "1 मई"],
+      answer: "15 अगस्त"
+    },
+    {
+      question: "किस नेता को भारत के स्वतंत्रता संग्राम का 'पिता' कहा जाता है?",
+      options: ["महात्मा गांधी", "पंडित जवाहरलाल नेहरू", "सुभाष चंद्र बोस", "भगत सिंह"],
+      answer: "महात्मा गांधी"
+    },
+    {
+      question: "राष्ट्रीय ध्वज का किसने डिजाइन किया था?",
+      options: ["पिंगली वेंकैया", "मोहंडास गांधी", "भगत सिंह", "राजेंद्र प्रसाद"],
+      answer: "पिंगली वेंकैया"
+    },
+    {
+      question: "राष्ट्रीय ध्वज में केसरिया रंग का क्या मतलब है?",
+      options: ["धैर्य और बलिदान", "शांति", "समृद्धि", "शक्ति"],
+      answer: "धैर्य और बलिदान"
+    },
+    {
+      question: "राष्ट्रीय ध्वज का सफेद रंग क्या दर्शाता है?",
+      options: ["शांति और सच्चाई", "धैर्य", "वीरता", "स्वतंत्रता"],
+      answer: "शांति और सच्चाई"
+    },
+    {
+      question: "अशोक चक्र में कितनी तीलियां होती हैं?",
+      options: ["24", "12", "20", "18"],
+      answer: "24"
+    },
+    {
+      question: "भारत का राष्ट्रीय गान कौन सा है?",
+      options: ["जन गण मन", "वंदे मातरम्", "सारे जहां से अच्छा", "भारत माता की जय"],
+      answer: "जन गण मन"
+    }
+  ];
+
+  let currentQuestionIndex = 0;
+  let score = 0;
+
+  const questionEl = document.getElementById("question");
+  const optionsEl = document.getElementById("options");
+  const nextBtn = document.getElementById("next-btn");
+  const scoreContainer = document.getElementById("score-container");
+
+  function showQuestion() {
+    const currentQ = questions[currentQuestionIndex];
+    questionEl.textContent = `Q${currentQuestionIndex + 1}. ${currentQ.question}`;
+    optionsEl.innerHTML = "";
+
+    currentQ.options.forEach(option => {
+      const button = document.createElement("button");
+      button.textContent = option;
+      button.setAttribute('aria-label', `Answer option: ${option}`);
+      button.addEventListener("click", () => selectAnswer(option));
+      optionsEl.appendChild(button);
+    });
+
+    nextBtn.style.display = "none";
+    scoreContainer.textContent = "";
+  }
+
+  function selectAnswer(selectedOption) {
+    const correctAnswer = questions[currentQuestionIndex].answer;
+    const buttons = optionsEl.querySelectorAll("button");
+
+    buttons.forEach(button => {
+      button.disabled = true;
+      if(button.textContent === correctAnswer) {
+        button.style.backgroundColor = "#27ae60"; // green for correct
+        button.style.color = "white";
+        button.style.boxShadow = "0 5px 15px rgba(39, 174, 96, 0.8)";
+      } else if(button.textContent === selectedOption) {
+        button.style.backgroundColor = "#c0392b"; // red for wrong
+        button.style.color = "white";
+        button.style.boxShadow = "0 5px 15px rgba(192, 57, 43, 0.8)";
+      }
+    });
+
+    if(selectedOption === correctAnswer) {
+      score++;
+    }
+
+    nextBtn.style.display = "inline-block";
+    nextBtn.focus();
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestionIndex++;
+    if(currentQuestionIndex < questions.length) {
+      showQuestion();
+    } else {
+      showScore();
+    }
+  });
+
+  function showScore() {
+    questionEl.textContent = "Quiz पूरा हो गया!";
+    optionsEl.innerHTML = "";
+    nextBtn.style.display = "none";
+    scoreContainer.textContent = `आपका स्कोर: ${score} / ${questions.length}`;
+  }
+
+  // About modal logic
+  const aboutBtn = document.getElementById("about-btn");
+  const aboutModal = document.getElementById("about-modal");
+  const closeAbout = document.getElementById("close-about");
+  const overlay = document.getElementById("overlay");
+
+  aboutBtn.addEventListener("click", () => {
+    aboutModal.style.display = "block";
+    overlay.style.display = "block";
+    closeAbout.focus();
+  });
+
+  closeAbout.addEventListener("click", () => {
+    aboutModal.style.display = "none";
+    overlay.style.display = "none";
+    aboutBtn.focus();
+  });
+
+  overlay.addEventListener("click", () => {
+    aboutModal.style.display = "none";
+    overlay.style.display = "none";
+    aboutBtn.focus();
+  });
+
+  // Start quiz initially
+  showQuestion();
+</script>
+
+</body>
+</html> 
